@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.spring.myapp.model.mapper.TestTableMapper">
+
+    <select id="SelectAllList" resultType="com.example.spring.myapp.dto.EMPDTO">
+        SELECT empno, name, hpno, email
+        FROM EMP
+        WHERE EMPNO LIKE TRIM(#{id})  || '%'
+        ORDER BY EMPNO
+    </select>
+    <select id="SelectOne" resultType="com.example.spring.myapp.dto.EMPDTO">
+        SELECT empno, name, hpno, email
+        FROM EMP
+        WHERE EMPNO = #{id}
+    </select>
+    <select id="SelectMenuList" resultType="com.example.spring.myapp.dto.MENUDTO">
+		SELECT
+		    LEVEL AS depth,           -- 트리의 깊이를 출력
+		    id,                       -- 메뉴 ID
+		    name,                     -- 메뉴 이름
+		    parent_id                 -- 부모 메뉴 ID
+		FROM
+		    menu
+		START WITH
+		    parent_id IS NULL         -- 최상위 메뉴에서 시작
+		CONNECT BY
+		    PRIOR id = parent_id     -- 부모-자식 관계
+    </select>
+    <insert id="Insert" >
+        INSERT INTO EMP
+        (empno, name, hpno, email)
+        values
+        (TO_NUMBER(#{empno}) ,#{name}, #{hpno}, #{email} )
+    </insert>
+    <update id="update" >
+		UPDATE EMP
+		SET NAME = #{name}
+		  , HPNO = #{hpno}
+		  , EMAIL = #{email}
+		WHERE EMPNO = TO_NUMBER(#{empno})
+    </update>
+</mapper>
